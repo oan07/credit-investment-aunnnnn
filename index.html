@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คิดก่อนลงทุน | เงินจากบัตร ลงทุนแล้ว คุ้มไหม? - MONEY / LAB</title>
+  <meta name="description"
+    content="เครื่องมือคำนวณต้นทุนดอกเบี้ยบัตร เปรียบเทียบผลตอบแทนจากการลงทุน เห็นต้นทุนจริงก่อนตัดสินใจใช้เงินที่ยืมมา">
+
+  <!-- Google Fonts: Prompt & JetBrains Mono for clean, unified typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8c2.5-3 5.5-3 8 0s5.5 3 8 0"></path>
+            <path d="M4 12c2.5-3 5.5-3 8 0s5.5 3 8 0"></path>
+            <path d="M4 16c2.5-3 5.5-3 8 0s5.5 3 8 0"></path>
+          </svg>
+        </div>
+        <div class="brand-title-group">
+          <span class="brand-name">คิดก่อนลงทุน</span>
+          <span class="brand-divider">|</span>
+          <span class="brand-tagline">MONEY / LAB</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-wrapper">
+    <div class="container">
+
+      <!-- Hero Header Section -->
+      <section class="hero-section">
+        <div class="hero-left">
+          <span class="sub-category">CREDIT TO INVESTMENT</span>
+          <h1 class="hero-title">
+            เงินจากบัตร ลงทุนแล้ว <span class="highlight-text">คุ้มไหม?</span>
+          </h1>
+          <p class="hero-subtitle">
+            เห็นต้นทุนจริง ก่อนตัดสินใจใช้เงินที่ยืมมา
+          </p>
+        </div>
+
+        <div class="hero-right">
+          <div class="user-info-card">
+            <div class="user-info-header">ข้อมูลเริ่มต้น</div>
+            <div class="user-info-highlight" id="heroSummaryValues">0.00 บาท <span class="slash">/</span> 0% ต่อปี
+            </div>
+            <div class="user-info-sub">ปรับตัวเลขเพื่อคำนวณความคุ้มค่า</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calculator Grid: Input & Output -->
+      <div class="calculator-grid">
+
+        <!-- Column 1: Inputs Settings (01 ตั้งค่าการคำนวณ) -->
+        <div class="calculator-card settings-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-num">01</span>
+              <h2 class="card-title">ตั้งค่าการคำนวณ</h2>
+            </div>
+            <button type="button" class="btn-reset" id="btnReset" title="รีเซ็ตค่าเป็น 0">
+              <span>คืนค่าเริ่มต้น</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
+            </button>
+          </div>
+
+          <form id="calcForm" onsubmit="event.preventDefault();">
+            <!-- 1. เงินที่นำไปลงทุน (ใส่ Comma) -->
+            <div class="form-group">
+              <label for="investAmount" class="form-label">เงินที่นำไปลงทุน</label>
+              <div class="input-wrapper">
+                <input type="text" id="investAmount" class="form-input formatted-money-input" value="0"
+                  inputmode="numeric" placeholder="0">
+                <span class="input-suffix">บาท</span>
+              </div>
+              <div class="amount-quick-chips">
+                <button type="button" class="quick-chip" data-amount="1000">1,000</button>
+                <button type="button" class="quick-chip" data-amount="5000">5,000</button>
+                <button type="button" class="quick-chip" data-amount="10000">10,000</button>
+                <button type="button" class="quick-chip" data-amount="50000">50,000</button>
+                <button type="button" class="quick-chip" data-amount="100000">100,000</button>
+              </div>
+            </div>
+
+            <!-- 2 & 3. ดอกเบี้ยบัตรต่อปี & ค่าธรรมเนียมรวม -->
+            <div class="form-row">
+              <div class="form-group col-half">
+                <label for="cardInterestRate" class="form-label">ดอกเบี้ยบัตรต่อปี</label>
+                <div class="input-wrapper">
+                  <input type="number" id="cardInterestRate" class="form-input" value="25" min="0" max="100" step="0.1"
+                    placeholder="25">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+
+              <div class="form-group col-half">
+                <label for="cardFee" class="form-label">ค่าธรรมเนียมรวม</label>
+                <div class="input-wrapper">
+                  <input type="text" id="cardFee" class="form-input formatted-money-input" value="0" inputmode="numeric"
+                    placeholder="0">
+                  <span class="input-suffix">บาท</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Fee Calculator Shortcut -->
+            <div class="fee-helper-banner">
+              <button type="button" class="fee-helper-btn" id="btnApplyCashAdvanceFee">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>กดเงินสดจากบัตรเครดิต? คลิกใส่ค่าธรรมเนียม 3% + VAT (3.21%) อัตโนมัติ</span>
+              </button>
+            </div>
+
+            <!-- เลือกระบบการชำระเงิน: แบ่งจ่ายรายเดือน VS จ่ายเต็มก้อนเดียว -->
+            <div class="payment-mode-tabs">
+              <button type="button" class="tab-btn active" id="tabInstallment" data-mode="installment">
+                🗓️ แบ่งจ่ายรายเดือน (ลดต้นลดดอก)
+              </button>
+              <button type="button" class="tab-btn" id="tabLumpSum" data-mode="lumpSum">
+                💵 จ่ายเต็มก้อนเดียว
+              </button>
+            </div>
+
+            <!-- 4A. โหมดแบ่งจ่ายรายเดือน / จ่ายขั้นต่ำ (Installment Mode) -->
+            <div id="sectionInstallment" class="payment-sub-section">
+              <div class="installment-config-box">
+                <!-- แบนเนอร์บอกชัดเจนว่าคำนวณแบบลดต้นลดดอก -->
+                <div class="installment-badge-banner">
+                  <span class="badge-icon">📉</span>
+                  <span>ระบบคำนวณแบบ <strong>ลดต้นลดดอกจริง (Effective Rate)</strong> — ดอกเบี้ยจะลดลงทุกเดือนตามเงินต้นที่จ่ายคืน</span>
+                </div>
+
+                <div class="form-row">
+                  <!-- ช่อง: จำนวนงวด (เดือน) -->
+                  <div class="form-group col-half">
+                    <label for="installmentMonths" class="form-label">จำนวนงวด (เดือน)</label>
+                    <div class="input-wrapper">
+                      <input type="number" id="installmentMonths" class="form-input" value="3" min="1" max="60"
+                        step="1" placeholder="3">
+                      <span class="input-suffix">เดือน</span>
+                    </div>
+                  </div>
+
+                  <!-- ช่อง: ใส่จำนวนเงินที่แบ่งจ่ายเอง (เช่น 200) -->
+                  <div class="form-group col-half">
+                    <label for="customMonthlyPay" class="form-label">ยอดจ่ายต้นต่องวด (กรอกเองได้)</label>
+                    <div class="input-wrapper">
+                      <input type="text" id="customMonthlyPay" class="form-input formatted-money-input" value="0"
+                        inputmode="decimal" placeholder="0">
+                      <span class="input-suffix">บาท/ด.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Chips เดือนยอดฮิต -->
+                <div class="month-chips">
+                  <button type="button" class="month-chip active" data-months="3">3 เดือน</button>
+                  <button type="button" class="month-chip" data-months="6">6 เดือน</button>
+                  <button type="button" class="month-chip" data-months="10">10 เดือน</button>
+                  <button type="button" class="month-chip" data-months="12">12 เดือน</button>
+                </div>
+
+                <!-- แผนเลือกตัดเงินต้นด่วน -->
+                <div class="plan-quick-chips">
+                  <span class="plan-label">ลัดตัดต้น:</span>
+                  <button type="button" class="plan-chip" id="btnPlanEqual">หารเท่า (<span
+                      id="chipEqualAmount">0.00</span> บ.)</button>
+                  <button type="button" class="plan-chip" id="btnPlan200">กรอก 200 บ.</button>
+                  <button type="button" class="plan-chip" id="btnPlanMin3">ขั้นต่ำ 3%</button>
+                  <button type="button" class="plan-chip" id="btnPlanMin5">ขั้นต่ำ 5%</button>
+                  <button type="button" class="plan-chip" id="btnPlanMin8">ขั้นต่ำ 8%</button>
+                </div>
+
+                <!-- กล่องติ๊ก: หารรายเดือน รวม ยอดรับ (ต้น + กำไร) แล้วหาร -->
+                <div class="installment-checkbox-card">
+                  <label class="installment-check-label" for="chkDivideByMonths">
+                    <input type="checkbox" id="chkDivideByMonths" class="installment-check-input" checked>
+                    <span class="installment-check-box">
+                      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="3.5"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
+                    <div class="installment-check-text">
+                      <div class="check-title-row">
+                        <strong>หารรายเดือน: รวมยอดรับ (ต้น + กำไร) แล้วหาร <span id="labelMonthsInCard">0</span>
+                          เดือน</strong>
+                      </div>
+                      <div class="formula-sample-note">
+                        💡 ตัวอย่าง: งวดละ <span id="samplePrincipalPerMonth">0.00</span> (ต้น) + ดอกเบี้ย + กำไร
+                      </div>
+                    </div>
+                  </label>
+
+                  <div class="installment-breakdown-details" id="installmentBreakdownDetails">
+                    <div class="mini-calc-row">
+                      <span>• ยอดรับต่องวด (ต้น + กำไร):</span>
+                      <strong id="miniReceiveText">0.00 (ต้น) + 0.00 (กำไร) = 0.00 บ./ด.</strong>
+                    </div>
+                    <div class="mini-calc-row">
+                      <span>• ยอดจ่ายบัตรต่องวด (ต้น + ดอก):</span>
+                      <strong id="miniDebtText">0.00 (ต้น) + 0.00 (ดอก) = 0.00 บ./ด.</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ตารางแจกแจงการผ่อนชำระแต่ละเดือน -->
+                <div class="schedule-table-wrap">
+                  <div class="schedule-table-title">📊 ตารางผ่อนชำระแต่ละงวด (คำนวณแบบลดต้นลดดอกจริง ดอกเบี้ยลดลงทุกเดือน)</div>
+                  <table class="schedule-table" id="installmentTable">
+                    <thead>
+                      <tr>
+                        <th>งวด</th>
+                        <th>ต้นต่องวด</th>
+                        <th>+ดอกเบี้ย</th>
+                        <th>จ่ายบัตร</th>
+                        <th>+กำไร</th>
+                        <th>ยอดรับ(ต้น+กำไร)</th>
+                        <th>คงเหลือสุทธิ</th>
+                      </tr>
+                    </thead>
+                    <tbody id="installmentTableBody">
+                      <!-- Dynamic rows from app.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4B. โหมดจ่ายเต็มก้อนเดียว (วันเบิก - วันจ่าย) -->
+            <div id="sectionLumpSum" class="payment-sub-section hidden">
+              <div class="form-group date-calc-group">
+                <label class="form-label">ระยะเวลาลงทุน / ถือหนี้ (เลือกวันเบิกและวันจ่าย)</label>
+
+                <div class="form-row date-inputs-row">
+                  <div class="date-field">
+                    <span class="field-sub-label">📅 วันเบิกเงิน</span>
+                    <input type="date" id="withdrawDate" class="form-input date-input">
+                  </div>
+                  <div class="date-field">
+                    <span class="field-sub-label">📅 วันจ่ายคืน</span>
+                    <input type="date" id="repayDate" class="form-input date-input">
+                  </div>
+                </div>
+
+                <!-- แสดงผล / แก้ไขจำนวนวัน -->
+                <div class="days-summary-bar">
+                  <span class="days-summary-text">คำนวณได้:</span>
+                  <div class="input-wrapper days-inline-wrapper">
+                    <input type="number" id="investmentDays" class="form-input days-inline-input" value="90" min="1"
+                      max="3650" step="1" placeholder="90">
+                    <span class="input-suffix">วัน</span>
+                  </div>
+                </div>
+
+                <div class="days-chips">
+                  <button type="button" class="days-chip" data-days="10">10 วัน</button>
+                  <button type="button" class="days-chip" data-days="30">30 วัน</button>
+                  <button type="button" class="days-chip active" data-days="90">90 วัน</button>
+                  <button type="button" class="days-chip" data-days="365">1 ปี</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. ผลตอบแทนลงทุนที่คาดหวัง (เลือกกรอก % หรือ จำนวนเงินบาท) -->
+            <div class="form-group return-calc-group">
+              <div class="label-with-tag">
+                <label class="form-label">ผลตอบแทนลงทุนที่คาดหวัง</label>
+                <span class="badge-tag">เลือกกรอก % หรือ บาท</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-half" style="margin-bottom:0;">
+                  <span class="field-sub-label">คิดเป็น % ต่อปี</span>
+                  <div class="input-wrapper">
+                    <input type="number" id="expectedReturnRate" class="form-input" value="0" min="0" max="1000"
+                      step="0.1" placeholder="0">
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+
+                <div class="form-group col-half" style="margin-bottom:0;">
+                  <span class="field-sub-label">คิดเป็นจำนวนเงิน</span>
+                  <div class="input-wrapper">
+                    <input type="text" id="expectedReturnAmount" class="form-input formatted-money-input" value="0"
+                      inputmode="decimal" placeholder="0">
+                    <span class="input-suffix">บาท</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Return Rate Chips 3%, 5%, 7%, 8%, 10% -->
+              <div class="quick-rate-chips-row">
+                <span class="quick-rate-label">เลือกลัด:</span>
+                <button type="button" class="quick-rate-chip" data-rate="3">3%</button>
+                <button type="button" class="quick-rate-chip" data-rate="5">5%</button>
+                <button type="button" class="quick-rate-chip" data-rate="7">7%</button>
+                <button type="button" class="quick-rate-chip" data-rate="8">8%</button>
+                <button type="button" class="quick-rate-chip" data-rate="10">10%</button>
+              </div>
+
+              <p class="field-hint">ปรับตัวเลข % หรือจำนวนเงินได้ ระบบจะแปลงให้อัตโนมัติ • คิดแบบไม่ทบต้น</p>
+            </div>
+
+            <!-- 6. ภาษีจากกำไรลงทุน (ถ้ามี) -->
+            <div class="form-group">
+              <label for="taxRate" class="form-label">ภาษีจากกำไรลงทุน (ถ้ามี)</label>
+              <div class="input-wrapper">
+                <input type="number" id="taxRate" class="form-input" value="0" min="0" max="100" step="0.5"
+                  placeholder="0">
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+
+            <div class="form-footer-status">
+              <span class="live-dot"></span>
+              <span>คำนวณใหม่ทันทีเมื่อปรับตัวเลข</span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Column 2: Results Display (ผลลัพธ์ & Breakdown) -->
+        <div class="results-column">
+
+          <!-- Primary Hero Result Card (Dark Card) -->
+          <div class="result-hero-card" id="heroResultCard">
+            <div class="result-hero-header">
+              <span class="result-hero-label" id="heroResultLabel">ผลลัพธ์หลังหักต้นทุน</span>
+              <span class="status-pill status-breakeven" id="statusPill">เท่าทุนพอดี</span>
+            </div>
+
+            <div class="result-hero-value-wrap">
+              <span class="result-big-number" id="netProfitDisplay">0.00</span>
+              <span class="result-big-unit" id="netProfitUnit">บาท</span>
+            </div>
+
+            <div class="result-hero-message" id="resultHeroMessage">
+              กรอกข้อมูลเงินต้นและผลตอบแทนเพื่อเริ่มคำนวณ
+            </div>
+
+            <div class="result-hero-meta">
+              <div class="meta-item">
+                <span class="meta-label">ระยะเวลาที่คำนวณ</span>
+                <span class="meta-value" id="displayDays">0 วัน (0 เดือน)</span>
+              </div>
+              <div class="meta-item text-right">
+                <div class="meta-label-with-tip">
+                  <span class="meta-label">ผลตอบแทนสุทธิต่อเงินต้น</span>
+                </div>
+                <!-- ช่องกรอกมือ ผลตอบแทนสุทธิต่อเงินต้น (เช่น +3.54%) เพื่อคำนวณย้อนกลับอัตโนมัติ -->
+                <div class="net-roi-input-box">
+                  <input type="text" id="netRoiInput" class="net-roi-inline-input" value="0.00" placeholder="0.00">
+                  <span class="net-roi-unit">%</span>
+                </div>
+                <!-- ปุ่มลัด 3% 5% 7% 8% 10% ใต้ช่องผลตอบแทนสุทธิ -->
+                <div class="quick-roi-chips-group">
+                  <button type="button" class="quick-roi-chip" data-roi="3">3%</button>
+                  <button type="button" class="quick-roi-chip" data-roi="5">5%</button>
+                  <button type="button" class="quick-roi-chip" data-roi="7">7%</button>
+                  <button type="button" class="quick-roi-chip" data-roi="8">8%</button>
+                  <button type="button" class="quick-roi-chip" data-roi="10">10%</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Metric Cards (2 Columns) -->
+          <div class="metrics-row">
+            <div class="metric-card">
+              <span class="metric-label" id="cardInterestTitle">ดอกเบี้ยบัตร</span>
+              <div class="metric-value-wrap">
+                <span class="metric-number" id="cardInterestDisplay">0.00</span>
+                <span class="metric-unit" id="cardInterestUnit">บาท</span>
+              </div>
+              <span class="metric-sub" id="cardFeeSubtext">+ ค่าธรรมเนียม 0.00 บาท</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label" id="netGainTitle">กำไรลงทุนหลังลงทุน</span>
+              <div class="metric-value-wrap">
+                <span class="metric-number" id="netGainDisplay">0.00</span>
+                <span class="metric-unit" id="netGainUnit">บาท</span>
+              </div>
+              <span class="metric-sub" id="taxSubtext">หลังหักภาษี (ถ้ามี)</span>
+            </div>
+          </div>
+
+          <!-- Card 02: เงินของคุณไปที่ไหน -->
+          <div class="breakdown-card">
+            <div class="breakdown-header">
+              <div class="card-title-group">
+                <span class="step-num">02</span>
+                <h3 class="card-title">เงินของคุณไปที่ไหน</h3>
+              </div>
+              <span class="unit-indicator" id="unitIndicator">บาท</span>
+            </div>
+
+            <!-- กล่องแสดงสถานะการหารเฉลี่ยรายเดือน -->
+            <div class="monthly-status-badge-wrap">
+              <div class="monthly-status-pill" id="monthlyStatusPill">
+                <span class="status-indicator-dot"></span>
+                <span>โหมดคำนวณ: <strong>หารเฉลี่ยรายเดือน (<span id="labelMonthCount">0</span> เดือน)</strong></span>
+              </div>
+            </div>
+
+            <div class="breakdown-content">
+              <!-- Item 1: Investment Return -->
+              <div class="breakdown-bar-item">
+                <div class="bar-info-row">
+                  <span class="bar-title">
+                    <span class="square-bullet bullet-profit"></span>
+                    กำไรลงทุนก่อนภาษี
+                  </span>
+                  <span class="bar-value" id="barProfitPreTax">0.00</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-profit" id="barProfitFill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Item 2: Card Interest -->
+              <div class="breakdown-bar-item">
+                <div class="bar-info-row">
+                  <span class="bar-title">
+                    <span class="square-bullet bullet-interest"></span>
+                    ดอกเบี้ยเงินบัตร
+                  </span>
+                  <span class="bar-value" id="barInterestValue">0.00</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-interest" id="barInterestFill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Detail Line Items -->
+              <div class="breakdown-detail-list">
+                <div class="detail-row">
+                  <span class="detail-label">ค่าธรรมเนียมบัตร</span>
+                  <span class="detail-val" id="barFeeValue">0.00</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">ภาษีจากกำไร</span>
+                  <span class="detail-val" id="barTaxValue">0.00</span>
+                </div>
+              </div>
+
+              <div class="breakdown-divider"></div>
+
+              <!-- 3 รายการสรุปเงินเข้า-ออก (ยอดรับ ต้น+กำไร รวมกันแล้วหาร) -->
+              <div class="cashflow-summary-box">
+                <div class="cashflow-row debt-highlight">
+                  <div class="cashflow-label-group">
+                    <span class="cashflow-label">
+                      <span class="cf-dot cf-dot-red"></span>
+                      ยอดหนี้และค่าธรรมเนียมจ่ายบัตร
+                    </span>
+                    <span class="cashflow-sublabel" id="debtSubMonthly"></span>
+                  </div>
+                  <div class="cashflow-val-group">
+                    <span class="cashflow-val" id="totalDebtToPay">0.00</span>
+                    <span class="cashflow-unit" id="debtUnit">บาท</span>
+                  </div>
+                </div>
+
+                <div class="cashflow-row receive-highlight">
+                  <div class="cashflow-label-group">
+                    <span class="cashflow-label">
+                      <span class="cf-dot cf-dot-blue"></span>
+                      ยอดรับ (ต้น + กำไร)
+                    </span>
+                    <span class="cashflow-sublabel" id="receiveSubMonthly"></span>
+                  </div>
+                  <div class="cashflow-val-group">
+                    <span class="cashflow-val" id="totalReceivedAmount">0.00</span>
+                    <span class="cashflow-unit" id="receiveUnit">บาท</span>
+                  </div>
+                </div>
+
+                <div class="cashflow-divider"></div>
+
+                <div class="cashflow-row balance-highlight">
+                  <div class="cashflow-label-group">
+                    <span class="cashflow-label balance-title">
+                      คงเหลือ (กำไรลงทุนหลังลงทุน)
+                    </span>
+                    <span class="cashflow-sublabel" id="balanceSubMonthly"></span>
+                  </div>
+                  <div class="cashflow-val-group">
+                    <span class="cashflow-val balance-val" id="netBalanceAmount">0.00</span>
+                    <span class="cashflow-unit" id="balanceUnit">บาท</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Full-Width 5-Point Financial Summary Dashboard (ล่างสุดตามที่ต้องการ) -->
+      <section class="breakeven-section" id="breakevenDashboard">
+        <div class="summary-dashboard-card" id="summaryCard">
+          <div class="summary-card-header">
+            <div class="summary-header-left">
+              <span class="summary-badge">📋 สรุป 4 ข้อทางการเงิน (Real-Time)</span>
+              <h3 class="summary-main-title">กู้บัตรมาลงทุน สรุปแล้วคุ้มไหม?</h3>
+            </div>
+            <div class="summary-header-right">
+              <span class="summary-verdict-pill status-breakeven" id="summaryVerdictPill">
+                <span id="summaryVerdictIcon">⚖️</span> <span id="summaryVerdictText">เริ่มต้นการคำนวณ (0.00 บ.)</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- 4 Key Points Grid (2x2) -->
+          <div class="four-points-grid">
+            <!-- ข้อ 1: เงินต้นที่เบิก -->
+            <div class="point-card">
+              <div class="point-num-badge">1</div>
+              <div class="point-content">
+                <span class="point-label">เงินต้นที่เบิก</span>
+                <div class="point-value-row">
+                  <span class="point-val" id="sumPointPrincipal">0.00</span>
+                  <span class="point-unit">บาท</span>
+                </div>
+                <span class="point-sub" id="sumPointPrincipalSub">ยอดเงินต้นสำหรับนำไปลงทุน</span>
+              </div>
+            </div>
+
+            <!-- ข้อ 2: จำนวนวัน / ระยะเวลา & ประเภทการจ่าย (รวม 2 และ 3 เข้าด้วยกัน) -->
+            <div class="point-card highlight-cyan">
+              <div class="point-num-badge">2</div>
+              <div class="point-content">
+                <span class="point-label">จำนวนวัน / ระยะเวลา &amp; ประเภทการจ่าย</span>
+                <div class="point-value-row">
+                  <span class="point-val" id="sumPointDays">0</span>
+                  <span class="point-unit" id="sumPointDaysUnit">วัน</span>
+                  <span class="point-unit" id="sumPointMonthsUnit"></span>
+                  <span class="point-tag-pill" id="sumPointPaymentType">0 เดือน 0.00 บ.</span>
+                </div>
+                <span class="point-sub" id="sumPointDateRange">ตามกำหนดระยะเวลาลงทุน</span>
+                <div class="point-extra-row" id="sumPointCard2ReceiveWrap">
+                  <span class="point-inner-title text-blue">ยอดรับ (ต้น + กำไร)</span>
+                  <span class="point-sub text-blue-sub" id="sumPointCard2ReceiveText">0.00 (ต้น) + 0.00 (กำไร) • รวม 0.00 บ.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ข้อ 3: ยอดเรียกเก็บจ่ายบัตร (รวมดอกเบี้ยแล้ว) -->
+            <div class="point-card highlight-orange">
+              <div class="point-num-badge">3</div>
+              <div class="point-content">
+                <span class="point-label">ยอดเรียกเก็บจ่ายบัตร (รวมดอกเบี้ยแล้ว)</span>
+                <div class="point-split-row">
+                  <div class="point-split-main">
+                    <div class="point-value-row">
+                      <span class="point-val text-orange" id="sumPointTotalDebt">0.00</span>
+                      <span class="point-unit" id="sumPointDebtUnit">บาท</span>
+                    </div>
+                    <span class="point-sub" id="sumPointDebtMonthly">เงินต้น 0.00 บ. + ดอกเบี้ย 0.00 บ.</span>
+                  </div>
+                  <div class="point-split-detail">
+                    <div class="detail-pill">
+                      <span>ดอกเบี้ยบัตรทั้งหมด:</span>
+                      <strong class="text-orange" id="sumPointTotalInterest">0.00 บาท</strong>
+                    </div>
+                    <div class="detail-pill-sub" id="sumPointInterestMonthly">
+                      รวมจ่ายบัตรทั้งหมด 0.00 บ.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ข้อ 4: ยอดเรียกเก็บ / รับมา -->
+            <div class="point-card highlight-teal">
+              <div class="point-num-badge">4</div>
+              <div class="point-content">
+                <span class="point-label">ยอดเรียกเก็บ / รับมา</span>
+                <div class="point-split-row">
+                  <div class="point-split-main">
+                    <span class="point-inner-title text-blue">ยอดรับ (ต้น + กำไร)</span>
+                    <div class="point-value-row">
+                      <span class="point-val text-blue" id="sumPointTotalReceive">0.00</span>
+                      <span class="point-unit" id="sumPointReceiveUnit">บาท</span>
+                    </div>
+                    <span class="point-sub" id="sumPointReceiveSub">0.00 (ต้น) + 0.00 (กำไร) • รวม 0.00 บ.</span>
+                  </div>
+                  <div class="point-split-detail" id="sumNetResultBox">
+                    <span class="point-inner-title text-teal" id="sumNetResultTitle">คงเหลือ (กำไรลงทุนหลังลงทุน)</span>
+                    <div class="point-value-row">
+                      <span class="point-val text-teal" id="sumPointNetResult">+0.00</span>
+                      <span class="point-unit" id="sumPointNetUnit">บาท</span>
+                    </div>
+                    <span class="point-sub" id="sumPointNetMonthly">สุทธิรวมตลอดสัญญา 0.00 บ.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Break-Even Point Card -->
+        <div class="breakeven-card" style="margin-top: 14px;">
+          <div class="breakeven-left">
+            <div class="target-icon-wrap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="2" r="2"></circle>
+              </svg>
+            </div>
+            <div class="breakeven-text-group">
+              <span class="breakeven-label">BREAK-EVEN POINT</span>
+              <h3 class="breakeven-title">ต้องได้ผลตอบแทนเท่าไหร่ ถึงจะคุ้มทุน?</h3>
+              <p class="breakeven-desc" id="breakevenDesc">
+                กรอกข้อมูลต้นทุนบัตรและเงินต้นเพื่อคำนวณจุดคุ้มทุน
+              </p>
+            </div>
+          </div>
+
+          <div class="breakeven-right">
+            <div class="breakeven-rate" id="breakevenRateDisplay">0.00%</div>
+            <div class="breakeven-rate-sub">ต่อปี ก่อนหักภาษี</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Expandable Accordion: วิธีคิดและสมมติฐาน -->
+      <section class="accordion-section">
+        <div class="accordion-item" id="accordionAssumptions">
+          <button type="button" class="accordion-header" id="btnToggleAccordion" aria-expanded="false">
+            <span class="accordion-title">วิธีคิดและสมมติฐาน</span>
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+
+          <div class="accordion-body" id="accordionBody">
+            <div class="accordion-inner">
+              <div class="guide-grid">
+                <div class="guide-box">
+                  <h4>1. การคิดดอกเบี้ยบัตร (ลดต้นลดดอก / รายวัน)</h4>
+                  <p class="formula-code">ดอกเบี้ย = เงินต้นคงค้าง × (อัตราดอกเบี้ยต่อปี / 365) × จำนวนวัน</p>
+                  <p>เมื่อมีการแบ่งจ่ายหรือชำระขั้นต่ำ ยอดหนี้เงินต้นจะลดลง และนำยอดคงเหลือไปคำนวณดอกเบี้ยในงวดถัดไป</p>
+                </div>
+
+                <div class="guide-box">
+                  <h4>2. การคำนวณกำไรจากการลงทุน</h4>
+                  <p class="formula-code">กำไร = เงินต้น × (ผลตอบแทนต่อปี / 365) × จำนวนวัน</p>
+                  <p>คิดตามสัดส่วนระยะเวลาลงทุนจริง (สมมติฐานแบบไม่ทบต้นในระยะสั้น) และหักภาษีหัก ณ ที่จ่ายตามที่ระบุ
+                  </p>
+                </div>
+
+                <div class="guide-box">
+                  <h4>3. การเฉลี่ยยอดรับ (ต้น + กำไร) หารจำนวนเดือน</h4>
+                  <p>นำเงินต้นและผลตอบแทนที่ได้รับมารวมกันแล้วเฉลี่ยเป็นรายเดือน เพื่อเปรียบเทียบกับยอดเรียกเก็บของบัตร
+                    (เงินต้นผ่อน + ดอกเบี้ย) ในแต่ละงวดได้อย่างชัดเจน</p>
+                </div>
+
+                <div class="guide-box warning-box">
+                  <h4>⚠️ ข้อเตือนใจสำคัญ</h4>
+                  <p><strong>การลงทุนมีความเสี่ยง แต่ภาระหนี้เป็นสิ่งที่ต้องจ่ายแน่นอน 100%</strong>
+                    ผลตอบแทนจากการลงทุนมีความผันผวนและอาจขาดทุนได้ ในขณะที่ดอกเบี้ยเงินกู้เดินทุกวัน
+                    การกู้เงินมาลงทุนจึงมีความเสี่ยงสูงมาก</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>© 2026 คิดก่อนลงทุน โดย MONEY / LAB • เครื่องมือนี้จัดทำเพื่อการศึกษาและสร้างความตระหนักรู้ทางการเงิน
+          ไม่ใช่คำแนะนำการลงทุน</p>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastNotification" role="alert" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
